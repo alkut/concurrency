@@ -3,8 +3,6 @@ project(pure)
 project(exceptions)
 project(locks)
 
-set(CMAKE_CXX_STANDARD 20)
-
 find_package(Boost 1.81 REQUIRED COMPONENTS unit_test_framework)
 
 include_directories(${Boost_INCLUDE_DIRS})
