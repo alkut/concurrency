@@ -5,7 +5,7 @@
 #include "workSplitter-std_thread.h"
 
 std::vector<int> sample_int = {0, 0, 0};
-std::vector<int> expected_int_without_mutex = {0, 0, 1};
+std::vector<int> expected_int = {0, 0, 1};
 
 int dirty_function(int x) {
     ++sample_int.back();
@@ -16,5 +16,5 @@ int dirty_function(int x) {
 //(if 3rd thread return value before other write into sample_int)
 BOOST_AUTO_TEST_CASE(dirty) {
     auto result = split_work<int, int>(sample_int, dirty_function, 1);
-    BOOST_ASSERT(result != expected_int_without_mutex);
+    BOOST_ASSERT(result != expected_int);
 }

@@ -5,7 +5,7 @@
 #include "workSplitter-std_thread.h"
 
 int slow(int x) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     return x;
 }
 
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE(without_locks) {
 BOOST_AUTO_TEST_CASE(with_locks) {
     std::vector<int> result;
     auto spy = []() {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         for (auto& it: sample_int2)
             it = 666;
     };
