@@ -1,7 +1,6 @@
 #define BOOST_TEST_MODULE LOCKS
 
 #include <boost/test/unit_test.hpp>
-#include <semaphore.h>
 
 #include "workSplitter-std_thread.h"
 
@@ -16,10 +15,10 @@ std::vector<int> sample_int2 = {1, 2, 3};
 std::vector<int> expected_int_with_mutex = {1, 2, 3};
 
 BOOST_AUTO_TEST_CASE(without_locks) {
+    std::vector<int> result;
     auto spy = []() {
         sample_int1.back() = 666;
     };
-    std::vector<int> result;
     auto work = [&result]() {
         result = split_work<int, int>(sample_int1, slow, 1);
     };
@@ -34,7 +33,8 @@ BOOST_AUTO_TEST_CASE(with_locks) {
     std::vector<int> result;
     auto spy = []() {
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        sample_int2.back() = 666;
+        for (auto& it: sample_int2)
+            it = 666;
     };
     auto work = [&result]() {
         std::mutex mutex;

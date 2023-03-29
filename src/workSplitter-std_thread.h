@@ -9,10 +9,25 @@
 
 #include "one_thread_array_work.h"
 
+/**
+ *
+ * @tparam TOutput must have default constructor
+ * @param function must be pure and noexcept
+ * @param threshold must not be equal zero
+ * @Note thread unsafe
+ */
 template<class TInput, class TOutput, class TFunction = std::function<TOutput(TInput)>>
 std::vector<TOutput> split_work(const std::vector<TInput> &input, const TFunction &function,
                                 size_t threshold);
 
+
+/**
+ *
+ * @tparam TOutput must have default constructor
+ * @param function must be pure and noexcept
+ * @param threshold must not be equal zero
+ * @Note thread safe
+ */
 template<class TInput, class TOutput, class TFunction = std::function<TOutput(TInput)>>
 std::vector<TOutput> split_work(const std::vector<TInput> &input, const TFunction &function,
                                 size_t threshold, std::mutex &mutex);
@@ -21,6 +36,9 @@ std::vector<TOutput> split_work(const std::vector<TInput> &input, const TFunctio
 template<class TInput, class TOutput, class TFunction>
 std::vector<TOutput>
 split_work(const std::vector<TInput> &input, const TFunction &function, const size_t threshold) {
+    if (input.empty()) {
+        return {};
+    }
     static_assert(std::is_constructible_v<TOutput>, "Output type must have default constructor");
     assert(threshold != 0);
     std::vector<TOutput> output(input.size());
@@ -40,6 +58,9 @@ split_work(const std::vector<TInput> &input, const TFunction &function, const si
 template<class TInput, class TOutput, class TFunction>
 std::vector<TOutput>
 split_work(const std::vector<TInput> &input, const TFunction &function, size_t threshold, std::mutex &mutex) {
+    if (input.empty()) {
+        return {};
+    }
     static_assert(std::is_constructible_v<TOutput>, "Output type must have default constructor");
     assert(threshold != 0);
     std::lock_guard<std::mutex> scope_lock(mutex);

@@ -8,7 +8,7 @@ int main() {
     auto res = split_work<int, int, std::function<int(int)>>(input, [](int x) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         return x * x;
-    }, 2);
+    }, 1);
     for (const auto &it: res) {
         std::cout << it << " ";
     }
